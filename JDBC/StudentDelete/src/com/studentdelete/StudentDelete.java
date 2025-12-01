@@ -1,0 +1,73 @@
+package com.studentdelete;
+
+import java.sql.*;
+import java.util.Scanner;
+
+public class StudentDelete {
+    public static void main(String[] args) {
+
+        String url = "jdbc:mysql://localhost:3306/cdac";
+        String user = "root";
+        String pass = "cdac@123";
+
+        Connection con = null;
+        PreparedStatement pst = null;
+        Scanner sc = new Scanner(System.in);
+
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection(url, user, pass);
+
+            System.out.println("Choose Operation: 1 = Update, 2 = Delete");
+            int choice = sc.nextInt();
+            sc.nextLine(); // consume newline
+
+            if (choice == 1) {
+                // UPDATE
+                System.out.print("Enter Student ID to update: ");
+                int sid = sc.nextInt();
+                sc.nextLine();
+
+                System.out.print("Enter new GPA: ");
+                float gpa = sc.nextFloat();
+                sc.nextLine();
+
+                System.out.print("Enter new Balance: ");
+                int balance = sc.nextInt();
+                sc.nextLine();
+
+                String updateSQL = "UPDATE student SET gpa = ?, balance = ? WHERE sid = ?";
+                pst = con.prepareStatement(updateSQL);
+                pst.setFloat(1, gpa);
+                pst.setInt(2, balance);
+                pst.setInt(3, sid);
+
+                int rowsUpdated = pst.executeUpdate();
+                System.out.println(rowsUpdated + " record(s) updated successfully.");
+
+            } else if (choice == 2) {
+                // DELETE
+                System.out.print("Enter Student ID to delete: ");
+                int sid = sc.nextInt();
+                sc.nextLine();
+
+                String deleteSQL = "DELETE FROM student WHERE sid = ?";
+                pst = con.prepareStatement(deleteSQL);
+                pst.setInt(1, sid);
+
+                int rowsDeleted = pst.executeUpdate();
+                System.out.println(rowsDeleted + " record(s) deleted successfully.");
+
+            } else {
+                System.out.println("Invalid choice.");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try { if (pst != null) pst.close(); } catch (Exception ex) {}
+            try { if (con != null) con.close(); } catch (Exception ex) {}
+            sc.close();
+        }
+    }
+}
