@@ -1,0 +1,52 @@
+package com.subquery;
+import java.sql.*;
+
+
+public class SubQueries {
+    public static void main(String[] args) {
+
+        String url = "jdbc:mysql://localhost:3306/yourDBName";
+        String user = "root";
+        String pass = "yourPassword";
+
+        Connection con = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            // Load MySQL Driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            // Connect to DB
+            con = DriverManager.getConnection(url, user, pass);
+
+            // SQL with subquery
+            String query = "SELECT cid, name, city, item, price, balance "
+                         + "FROM customers "
+                         + "WHERE balance = (SELECT MAX(balance) FROM customers)";
+
+            ps = con.prepareStatement(query);
+
+            rs = ps.executeQuery();
+
+            System.out.println("Customer(s) with Maximum Balance:");
+
+            while (rs.next()) {
+                System.out.println("CID     : " + rs.getInt("cid"));
+                System.out.println("Name    : " + rs.getString("name"));
+                System.out.println("City    : " + rs.getString("city"));
+                System.out.println("Item    : " + rs.getString("item"));
+                System.out.println("Price   : " + rs.getInt("price"));
+                System.out.println("Balance : " + rs.getInt("balance"));
+                System.out.println("---------------------------------------");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try { if (rs != null) rs.close(); } catch (Exception ex) {}
+            try { if (ps != null) ps.close(); } catch (Exception ex) {}
+            try { if (con != null) con.close(); } catch (Exception ex) {}
+        }
+    }
+}

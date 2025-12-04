@@ -14,7 +14,7 @@ public class ConnectionTest {
 			Statement st=con.createStatement();
 			st.executeUpdate("INSERT INTO student(id, name, cgpa) VALUES(101, 'vamsi', 8.5)");
 			System.out.println("Data Inserted Succcessfully");
-			con.close();
+			con.close();//closing connection
 		}
 		catch(Exception e) {
 			e.printStackTrace();

@@ -1,0 +1,59 @@
+package com.textdata;
+import java.sql.*;
+import java.io.*;
+
+public class TextData {
+	 public static void main(String[] args) {
+
+	        Connection con = null;
+	        PreparedStatement pst = null;
+
+	        try {
+	            // Load Driver
+	            Class.forName("com.mysql.cj.jdbc.Driver");
+
+	            // DB Connection
+	            con = DriverManager.getConnection(
+	                    "jdbc:mysql://localhost:3306/test", "root", "root");
+
+	            // Prepared Statement for INSERT
+	            String query = "INSERT INTO student(name, city, gpa, balance) VALUES (?, ?, ?, ?)";
+	            pst = con.prepareStatement(query);
+
+	            // Read from file
+	            BufferedReader br = new BufferedReader(new FileReader("student.txt"));
+	            String line;
+
+	            while ((line = br.readLine()) != null) {
+
+	                String[] data = line.split(" ");
+
+	                String name = data[0];
+	                String city = data[1];
+	                float gpa = Float.parseFloat(data[2]);
+	                int balance = Integer.parseInt(data[3]);
+
+	                pst.setString(1, name);
+	                pst.setString(2, city);
+	                pst.setFloat(3, gpa);
+	                pst.setInt(4, balance);
+
+	                pst.executeUpdate();
+	            }
+
+	            br.close();
+	            System.out.println("Data inserted successfully into student table!");
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+
+	        } finally {
+	            try {
+	                if (pst != null) pst.close();
+	                if (con != null) con.close();
+	            } catch (SQLException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
+}
