@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="http://maven.apache.org/POM/4.0.0"
+           targetNamespace="http://maven.apache.org/POM/4.0.0"
+           elementFormDefault="qualified">
+  <!-- Minimal schema that declares the root <project> element and allows any content.
+       This avoids external downloads while satisfying IDE XML validation. -->
+  <xs:element name="project">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:anyAttribute/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
